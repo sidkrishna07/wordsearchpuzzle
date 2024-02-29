@@ -54,6 +54,9 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+
+
+
 void printPuzzle(char** arr) {
 	// This function will print out the complete puzzle grid (arr). 
     // It must produce the output in the SAME format as the samples 
@@ -61,6 +64,9 @@ void printPuzzle(char** arr) {
     // Your implementation here...
 
 }
+
+
+
 
 void searchPuzzle(char** arr, char* word) {
     // This function checks if arr contains the search word. If the 
