@@ -54,8 +54,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-
-
+//TWO FUNCTIONS NEED TO BE COMPLETED THIS WEEK
 
 void printPuzzle(char** arr) {
 	// This function will print out the complete puzzle grid (arr). 
@@ -64,8 +63,6 @@ void printPuzzle(char** arr) {
     // Your implementation here...
 
 }
-
-
 
 
 void searchPuzzle(char** arr, char* word) {
