@@ -119,9 +119,6 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
     // If we're out of bounds
     if (x < 0 || y < 0 || x >= size || y >= size) return 0;
 
-    // If we've found the whole word
-    if (index == strlen(word)) return 1;
-
     // If the current character doesn't match
     char gridChar = *(*(arr + x) + y);
     char wordChar = *(word + index);
@@ -129,9 +126,19 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
     if (wordChar >= 'a' && wordChar <= 'z') wordChar -= 32;
     if (gridChar != wordChar) return 0;
 
-    // Mark the current cell as visited and add it to the path
+    // If we've found the whole word
+    if (index == strlen(word) - 1) {
+        // Mark the final cell as visited and add it to the path
+        *(*(arr + x) + y) = 0;
+        *(*(path + x) + y) = count;
+        return 1;
+    }
+
+    // Save the current cell value and mark it as visited
     char temp = *(*(arr + x) + y);
     *(*(arr + x) + y) = 0;
+
+    // Mark the current cell in the path
     *(*(path + x) + y) = count;
 
     // Define all 8 possible directions to search: up, down, left, right, and diagonals
