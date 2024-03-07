@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h> 
 
 void printPuzzle(char** arr, int size);
 void searchPuzzle(char** arr, char* word, int size);
-void toUpperWord(char* word);
-int searchWord(char **arr, char *word, int x, int y, int dx, int dy, int size, int **path); 
 void printPath(int **path, int bSize);
+void toUpperWord(char* word);
+int searchWord(char **arr, int **path, int x, int y, char *word, int index, int size, int count);
 
 // Main function, DO NOT MODIFY
 int main(int argc, char **argv) {
@@ -63,83 +62,99 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-// Function to print the puzzle
 void printPuzzle(char** arr, int bSize) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
-            printf("%c ", arr[i][j]);
+            printf("%c ", *(*(arr + i) + j));
         }
         printf("\n");
     }
 }
 
-// Function to convert string to uppercase
 void toUpperWord(char* word) {
     while (*word) {
-        *word = toupper((unsigned char)*word);
+        if (*word >= 'a' && *word <= 'z') *word -= 32;
         word++;
     }
 }
 
-
-
-
-void searchPuzzle(char **arr, char *word, int bSize) {
-    int **path = (int **)malloc(bSize * sizeof(int *));
-    for (int i = 0; i < bSize; i++) {
-        path[i] = (int *)calloc(bSize, sizeof(int));
-    }
-
+void searchPuzzle(char **arr, char* word, int size) {
     int found = 0;
 
-    for (int i = 0; i < bSize && !found; i++) {
-        for (int j = 0; j < bSize && !found; j++) {
-            for (int dx = -1; dx <= 1 && !found; dx++) {
-                for (int dy = -1; dy <= 1 && !found; dy++) {
-                    if (dx == 0 && dy == 0) continue;
-                    if (searchWord(arr, word, i, j, dx, dy, bSize, path)) {
-                        found = 1;
-                        break;
-                    }
-                }
+    // Create a 2D array to store the path
+    int **path = (int**)malloc(size * sizeof(int*));
+    for (int i = 0; i < size; i++) {
+        path[i] = (int*)malloc(size * sizeof(int));
+        memset(path[i], 0, size * sizeof(int));
+    }
+
+    printf("\n");
+
+    // Iterate through each cell in the grid as a starting point
+    for (int x = 0; x < size && !found; x++) {
+        for (int y = 0; y < size && !found; y++) {
+            // Try to find the word starting from (x, y)
+            if (searchWord(arr, path, x, y, word, 0, size, 1)) {
+                found = 1;
+                printf("Word found!\n"); // Changed wording
+                printf("Printing the search path:\n"); // Added line
+                printPath(path, size);
+                break; // Found the word, no need to search further
             }
         }
     }
 
-    if(found) {
-        printf("Word '%s' found!\n", word);
-        printPath(path, bSize);
-    } else {
-        printf("Word '%s' not found.\n", word);
+    if (!found) {
+        printf("Word not found.\n"); // Changed wording
     }
 
-    for (int i = 0; i < bSize; i++) {
+    // Free the path array
+    for (int i = 0; i < size; i++) {
         free(path[i]);
     }
     free(path);
 }
 
-int searchWord(char **arr, char *word, int x, int y, int dx, int dy, int size, int **path) {
-    int len = strlen(word);
-    for (int i = 0; i < len; i++) {
-        int newX = x + i * dx;
-        int newY = y + i * dy;
-        if (newX < 0 || newY < 0 || newX >= size || newY >= size || toupper(arr[newX][newY]) != toupper(word[i])) {
-            return 0;
+int searchWord(char **arr, int **path, int x, int y, char *word, int index, int size, int count) {
+    // If we're out of bounds
+    if (x < 0 || y < 0 || x >= size || y >= size) return 0;
+
+    // If we've found the whole word
+    if (index == strlen(word)) return 1;
+
+    // If the current character doesn't match
+    char gridChar = *(*(arr + x) + y);
+    char wordChar = *(word + index);
+    if (gridChar >= 'a' && gridChar <= 'z') gridChar -= 32;
+    if (wordChar >= 'a' && wordChar <= 'z') wordChar -= 32;
+    if (gridChar != wordChar) return 0;
+
+    // Mark the current cell as visited and add it to the path
+    char temp = *(*(arr + x) + y);
+    *(*(arr + x) + y) = 0;
+    *(*(path + x) + y) = count;
+
+    // Define all 8 possible directions to search: up, down, left, right, and diagonals
+    int directions[8][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+
+    // Try to find the rest of the word in all directions from (x, y)
+    for (int d = 0; d < 8; d++) {
+        if (searchWord(arr, path, x + directions[d][0], y + directions[d][1], word, index + 1, size, count + 1)) {
+            // If we found the rest of the word, return 1
+            return 1;
         }
-        path[newX][newY] = i + 1;
     }
-    return 1;
+
+    // If we didn't find the rest of the word, unmark the current cell and remove it from the path
+    *(*(arr + x) + y) = temp;
+    *(*(path + x) + y) = 0;
+    return 0;
 }
 
 void printPath(int **path, int bSize) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
-            if (path[i][j] != 0) {
-                printf("%2d ", path[i][j]);
-            } else {
-                printf(" . ");
-            }
+            printf("%d     ", *(*(path + i) + j)); // Changed to print five spaces
         }
         printf("\n");
     }
