@@ -151,7 +151,7 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
 void printPath(int **path, int bSize) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
-            printf("%d     ", *(*(path + i) + j)); // Changed to print five spaces
+            printf("%-5d", *(*(path + i) + j)); // Use a width specifier of 5 with the '-' flag
         }
         printf("\n");
     }
