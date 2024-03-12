@@ -2,12 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+//Function Declarations
 void printPuzzle(char** arr, int size);
 void searchPuzzle(char** arr, char* word, int size);
 void printPath(int **path, int bSize);
 void toUpperWord(char* word);
 int searchWord(char **arr, int **path, int x, int y, char *word, int index, int size, int count);
 
+
+//Main Function DO NOT MODIFY
 int main(int argc, char **argv) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <puzzle file name>\n", *argv);
@@ -35,15 +39,17 @@ int main(int argc, char **argv) {
     }
     fclose(fptr);
 
+    // Ask the user for the word to search
     printf("Enter the word to search: ");
     scanf("%s", word);
     toUpperWord(word);
 
+    // Print puzzle and search for the word
     printf("\nPrinting puzzle before search:\n");
     printPuzzle(block, bSize);
-
     searchPuzzle(block, word, bSize);
 
+    //Free the allocated memory
     for (i = 0; i < bSize; i++) {
         free(*(block + i));
     }
@@ -53,6 +59,8 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+
+//Prints content of 2D puzzle array
 void printPuzzle(char** arr, int bSize) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
@@ -62,6 +70,8 @@ void printPuzzle(char** arr, int bSize) {
     }
 }
 
+
+//Converts characterts in given string to uppercase
 void toUpperWord(char* word) {
     while (*word) {
         if (*word >= 'a' && *word <= 'z') *word -= 32;
@@ -69,6 +79,8 @@ void toUpperWord(char* word) {
     }
 }
 
+
+//Searches for the given word in the puzzle
 void searchPuzzle(char **arr, char* word, int size) {
     int pathFound = 0;
 
@@ -103,6 +115,8 @@ void searchPuzzle(char **arr, char* word, int size) {
     free(path);
 }
 
+
+//Helper function for searchPuzzle performing the recursive search for word in puzzle starting from position (x,y)
 int searchWord(char **arr, int **path, int x, int y, char *word, int index, int size, int count) {
     if (x < 0 || y < 0 || x >= size || y >= size) return 0;
 
@@ -136,6 +150,8 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
     return 0;
 }
 
+
+//Prints the search path array
 void printPath(int **path, int bSize) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
