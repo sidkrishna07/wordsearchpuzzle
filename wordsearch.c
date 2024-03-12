@@ -129,8 +129,8 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
     if (wordChar >= 'a' && wordChar <= 'z') wordChar -= 32;
     if (gridChar != wordChar) return 0;
 
-    // Mark the current cell as visited and add it to the path
-    *(*(path + x) + y) = count;
+
+    *(*(path + x) + y) = (*(*(path + x) + y) * 10) + count;
 
     // Define all 8 possible directions to search: up, down, left, right, and diagonals
     int directions[8][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
