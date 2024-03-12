@@ -155,7 +155,7 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
 void printPath(int **path, int bSize) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
-            printf("%-5d", *(*(path + i) + j));
+            printf("%-7d", *(*(path + i) + j));
         }
         printf("\n");
     }
