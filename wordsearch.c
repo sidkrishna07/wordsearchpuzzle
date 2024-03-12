@@ -116,7 +116,15 @@ int searchWord(char **arr, int **path, int x, int y, char *word, int index, int 
 
     *(*(path + x) + y) = (*(*(path + x) + y) * 10) + count;
 
-    int directions[8][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+    int (*directions)[2] = (int (*)[2])malloc(8 * sizeof(int[2]));
+    *(*(directions + 0) + 0) = -1; *(*(directions + 0) + 1) = 0;
+    *(*(directions + 1) + 0) = 1; *(*(directions + 1) + 1) = 0;
+    *(*(directions + 2) + 0) = 0; *(*(directions + 2) + 1) = -1;
+    *(*(directions + 3) + 0) = 0; *(*(directions + 3) + 1) = 1;
+    *(*(directions + 4) + 0) = -1; *(*(directions + 4) + 1) = -1;
+    *(*(directions + 5) + 0) = -1; *(*(directions + 5) + 1) = 1;
+    *(*(directions + 6) + 0) = 1; *(*(directions + 6) + 1) = -1;
+    *(*(directions + 7) + 0) = 1; *(*(directions + 7) + 1) = 1;
 
     for (int d = 0; d < 8; d++) {
         if (searchWord(arr, path, x + *(*(directions + d) + 0), y + *(*(directions + d) + 1), word, index + 1, size, count + 1)) {
